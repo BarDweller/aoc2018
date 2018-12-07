@@ -45,7 +45,7 @@ func loaddata(input string) (root node, nodemap map[string]*node) {
 		}
 	}
 
-	//if we have multiple.. lets add our own root of "" that sits above them all
+	//in case we have multiple.. lets add our own root of "" that sits above them all
 	root = node{label: "", parents: []*node{}, children: roots}
 	for _, child := range roots {
 		(*child).parents = append((*child).parents, &root)
