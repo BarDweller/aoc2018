@@ -106,6 +106,7 @@ func walkNodes2(chosen node, nodemap *map[string]int, nodes map[string]*node) {
 			}
 
 			//so now we know which node we'll do next, and with which worker.
+			//(skip the virtual root node with a label of "" because it conceptually adds zero time)
 			if (*nodes[nextNode]).label != "" {
 				//for example scenario...
 				time := int(rune((*nodes[nextNode]).label[0]) - 'A' + 1)
