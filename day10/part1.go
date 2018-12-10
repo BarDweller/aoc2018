@@ -112,7 +112,8 @@ func moveuntilcandidate(particles []particle) int {
 
 func main() {
 	particles := loaddata(testdata())
-	moveuntilcandidate(particles)
+	iter := moveuntilcandidate(particles)
+	main2(iter)
 }
 
 func testdata() string {
