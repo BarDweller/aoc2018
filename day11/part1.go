@@ -37,42 +37,72 @@ func buildlayer1(id, max int) [][]int {
 	return result
 }
 
-func buildlayer2(grid [][]int, max, side int) [][]int {
-	result := make([][]int, max+1)
-	for y := 1; y <= (max - (side - 1)); y++ {
-		result[y] = make([]int, max+1)
-		for x := 1; x <= (max - (side - 1)); x++ {
-			for sx := 0; sx < side; sx++ {
-				for sy := 0; sy < side; sy++ {
-					result[y][x] += grid[y+sy][x+sx]
-				}
-			}
+func calcsquare(grid [][]int, max, side int) (result int) {
+	for sx := 1; sx <= side; sx++ {
+		for sy := 1; sy <= side; sy++ {
+			result += grid[sy][sx]
 		}
 	}
 	return result
 }
 
-func seekmax(grid2 [][]int, max, side int) (tx, ty, tval int) {
-	tval = 0
+func buildlayer2(grid [][]int, max, side int) (maxx, maxy, power int) {
+	result := make([][]int, max+1)
+	willneverscorethis := max * max * 50
+	firsty := willneverscorethis
+	xsqr := 0
 	for y := 1; y <= (max - (side - 1)); y++ {
+		result[y] = make([]int, max+1)
 		for x := 1; x <= (max - (side - 1)); x++ {
-			if tval < grid2[y][x] {
-				tval = grid2[y][x]
-				tx = x
-				ty = y
+			if x == 1 {
+				//first square in a row
+				if firsty == willneverscorethis {
+					//not just the first square in a row, also
+					//the first square in a column =)
+					//perform the first & only full square calc
+					firsty = calcsquare(grid, max, side)
+				} else {
+					//move the square down a row
+					for sx := 0; sx < side; sx++ {
+						//remove old row
+						firsty -= grid[y-1][x+sx]
+						//add new row
+						firsty += grid[y+side-1][x+sx]
+					}
+				}
+				//clone square total to row total
+				xsqr = firsty
+				//save total into grid (for debug!)
+				result[y][x] = firsty
+			} else {
+				//not the first square in a row.
+				//move the square across a row
+				for sy := 0; sy < side; sy++ {
+					//remove old column
+					xsqr -= grid[y+sy][x-1]
+					//add new column
+					xsqr += grid[y+sy][x+side-1]
+				}
+				//save total into grid (for debug!)
+				result[y][x] = xsqr
+			}
+			//dow we have a new winner?
+			if result[y][x] > power {
+				maxx = x
+				maxy = y
+				power = result[y][x]
 			}
 		}
 	}
-	return tx, ty, tval
+	return maxx, maxy, power
 }
 
 func main() {
 	max := 300
 	side := 3
-	grid1 := buildlayer1(8141, max)
-	grid := buildlayer2(grid1, max, side)
+	grid := buildlayer1(8141, max)
+	maxx, maxy, power := buildlayer2(grid, max, side)
 
-	fmt.Println(seekmax(grid, max, side))
-
-	main2(grid1)
+	fmt.Println("X:", maxx, " Y:", maxy, " POWER:", power)
+	main2(grid)
 }
