@@ -9,8 +9,7 @@ type sideresult struct {
 }
 
 func calcside(grid1 [][]int, max, side int, reply chan sideresult) {
-	grid := buildlayer2(grid1, max, side)
-	x, y, power := seekmax(grid, max, side)
+	x, y, power := buildlayer2(grid1, max, side)
 	reply <- sideresult{side: side, x: x, y: y, maxpower: power}
 }
 
