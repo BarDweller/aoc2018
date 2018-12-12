@@ -67,8 +67,9 @@ func itergroupins(data []byte, rules map[byte]bool, from int) (int, []byte) {
 				m := t & 0xF800
 				s := m >> 11
 				q := byte(s)
-				//todo, why -6 !!
-				appendbit(result, (i*8)+x-6, rules[q])
+				//we're comparing a 5 bit window, starting at byte i-1, but setting the middle bit in the output.
+				//so we need set the index at +2
+				appendbit(result, ((i-1)*8)+x+2, rules[q])
 				t = t << 1
 			}
 		}
