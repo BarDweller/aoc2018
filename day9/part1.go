@@ -35,7 +35,7 @@ func doplacement(maxmarble int, playercount int) {
 	currentnode := &zeromarblering
 	currentplayer := -1
 
-	for marblenumber := 1; marblenumber < maxmarble; marblenumber++ {
+	for marblenumber := 1; marblenumber <= maxmarble; marblenumber++ {
 		currentplayer = (currentplayer + 1) % playercount
 		if marblenumber%23 == 0 {
 			playerscores[currentplayer] += marblenumber
